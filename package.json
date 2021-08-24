@@ -1,0 +1,22 @@
+{
+  "name": "optionsdashboard",
+  "version": "1.0.0",
+  "description": "Our Options Dashboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshuaaguilar20/OptionsDashboard.git"
+  },
+  "author": "Tommy and Joshua",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshuaaguilar20/OptionsDashboard/issues"
+  },
+  "homepage": "https://github.com/joshuaaguilar20/OptionsDashboard#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
