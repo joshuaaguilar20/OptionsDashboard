@@ -1,10 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose');
+const path = require('path');
 const app = express()
 const port = 3000
 
-
-
+const User = require('./models/user');
 
 mongoose.connect('mongodb+srv://admin:somepassword@cluster0.ej23h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -15,6 +15,11 @@ mongoose.connect('mongodb+srv://admin:somepassword@cluster0.ej23h.mongodb.net/my
         console.log(err)
     })
 
+    app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+app.use(express.urlencoded({ extended: true }));
+
 //render if we want.
 
 
@@ -23,11 +28,18 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-
 //Routes to have to get stock info. 
-app.get('/getuser', (req, res) => {
+app.get('/user', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
   res.json({ user: 'tommy' })
 })
+
+app.post('/user', async (req, res) => {
+  const newUser = new User(req.body);
+  console.log(newUser)
+  await newUser.save();
+})
+
 //setup client-side
 
 
