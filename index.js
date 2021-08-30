@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT");
+  res.header("Access-Control-Allow-Methods", "GET, OPTIONS, DELETE, POST, PUT");
   res.header("Access-Control-Allow-Headers", "*");
   next();
 });
@@ -36,8 +36,9 @@ app.get('/', (req, res) => {
 })
 
 //Routes to have to get stock info. 
-app.get('/user', (req, res) => {
-  res.json({ name: 'tommy' })
+app.get('/user/all', async (req, res) => {
+  const allUsers = await User.find({});
+  res.json(allUsers)
 })
 
 app.get('/user/:id', async (req, res) => {
@@ -56,7 +57,7 @@ app.delete('/user/deleteall', async (req, res) => {
   const deletedProduct = await User.deleteMany({});
   console.log("deleted all")
 })
-
+ 
 //setup client-side
 
 
