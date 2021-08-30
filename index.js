@@ -3,10 +3,14 @@ const mongoose = require('mongoose');
 const path = require('path');
 const app = express()
 const port = 3000
+require('dotenv').config()
 
+const dbUser = process.env.MONGO_USER
+const dbPass = process.env.MONGO_PASSWORD
 const User = require('./models/user');
 
-mongoose.connect('mongodb+srv://admin:somepassword@cluster0.ej23h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+//never put string passwords in git. 
+mongoose.connect(`mongodb+srv://${dbUser}:${dbPass}@cluster0.ej23h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("MONGO CONNECTION OPEN!")
     })
@@ -20,6 +24,7 @@ app.set('view engine', 'ejs');
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+/* Middleware function to set headers prior to all request.  */
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header("Access-Control-Allow-Methods", "GET, OPTIONS, DELETE, POST, PUT");
@@ -30,9 +35,18 @@ app.use((req, res, next) => {
 //render if we want.
 
 
-//Routes to have to get stock info. 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+/* Assiocate with user: Josh: IBM, Apple
+   Notes: @TODO -> Logging
+   FRONT END Fetch stock price -> add then saves to db.
+*/
+app.get('/stock/add/:id/:symbol', (req, res) => {
+   //stock/pfe
+   const { symbol } = req.params;
+   console.log(symbol)
+   //GET API KEY -from stock site. 
+   //stock API to fetch stock price for that symbol -> 
+   //make request to the site with Data return to user/ 
+  res.send('Hel')
 })
 
 //Routes to have to get stock info. 
