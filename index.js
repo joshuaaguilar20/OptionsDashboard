@@ -35,14 +35,14 @@ app.use((req, res, next) => {
    Notes: @TODO -> Logging
    FRONT END Fetch stock price -> add then saves to db.
 */
-app.get('/stock/add/:id/:symbol', (req, res) => {
-   //stock/pfe
-   const { symbol } = req.params;
-   console.log(symbol)
-   //GET API KEY -from stock site. 
-   //stock API to fetch stock price for that symbol -> 
-   //make request to the site with Data return to user/ 
-  res.send('Hel')
+//check if stock already exists in user?
+app.get('/stock/add/:id/:symbol', async (req, res) => {
+  const { id, symbol } = req.params;
+  //GET API KEY -from stock site. 
+  //stock API to fetch stock price for that symbol -> 
+  //make request to the site with Data return to user/ 
+  const user = await User.findByIdAndUpdate(id, {$addToSet: {stock: [symbol]}}, { new: true });
+  console.log(user)
 })
 
 //Routes to have to get stock info. 
@@ -58,9 +58,16 @@ app.get('/user/:id', async (req, res) => {
 })
 
 app.post('/user', async (req, res) => {
-  const newUser = new User(req.body);
-  await newUser.save();
-  res.json({ id: `${newUser._id}`})
+  const searchUser = await User.find(req.body) 
+  console.log(searchUser)
+  if(searchUser.length !== 0) {
+    console.log("User already exists")
+  }
+  else {
+    const newUser = new User(req.body);
+    await newUser.save();
+    res.json({ id: `${newUser._id}`})
+  }
 })
 
 app.delete('/user/deleteall', async (req, res) => {

@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         min: 0
+    },
+    stock: {
+        type: Array,
+        required: false
     }
 })
 
