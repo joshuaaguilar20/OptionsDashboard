@@ -1,16 +1,16 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const path = require('path');
+require('dotenv').config()
 const app = express()
 const port = 3000
-require('dotenv').config()
-
 const dbUser = process.env.MONGO_USER
 const dbPass = process.env.MONGO_PASSWORD
 const User = require('./models/user');
-
-//never put string passwords in git. 
-mongoose.connect(`mongodb+srv://${dbUser}:${dbPass}@cluster0.ej23h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true })
+/* Setup DB */
+const dbURL = `mongodb+srv://${dbUser}:${dbPass}@cluster0.ej23h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+const mongoOptions = { useNewUrlParser: true, useUnifiedTopology: true }
+mongoose.connect(dbURL, mongoOptions)
     .then(() => {
         console.log("MONGO CONNECTION OPEN!")
     })
@@ -19,8 +19,7 @@ mongoose.connect(`mongodb+srv://${dbUser}:${dbPass}@cluster0.ej23h.mongodb.net/m
         console.log(err)
     })
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+/* middleware */
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -31,9 +30,6 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Headers", "*");
   next();
 });
-
-//render if we want.
-
 
 /* Assiocate with user: Josh: IBM, Apple
    Notes: @TODO -> Logging
