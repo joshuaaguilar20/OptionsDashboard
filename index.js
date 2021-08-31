@@ -42,7 +42,7 @@ app.get('/stock/add/:id/:symbol', async (req, res) => {
   //stock API to fetch stock price for that symbol -> 
   //make request to the site with Data return to user/ 
   const user = await User.findByIdAndUpdate(id, {$addToSet: {stock: [symbol]}}, { new: true });
-  console.log(user)
+  res.json(user)
 })
 
 //Routes to have to get stock info. 
