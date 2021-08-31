@@ -4,8 +4,10 @@ const path = require('path');
 require('dotenv').config()
 const app = express()
 const port = 3000
+
 const dbUser = process.env.MONGO_USER
 const dbPass = process.env.MONGO_PASSWORD
+
 const User = require('./models/user');
 /* Setup DB */
 const dbURL = `mongodb+srv://${dbUser}:${dbPass}@cluster0.ej23h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
@@ -36,6 +38,7 @@ app.use((req, res, next) => {
    FRONT END Fetch stock price -> add then saves to db.
 */
 //check if stock already exists in user?
+
 app.get('/stock/add/:id/:symbol', async (req, res) => {
   const { id, symbol } = req.params;
   //GET API KEY -from stock site. 
@@ -48,6 +51,8 @@ app.get('/stock/add/:id/:symbol', async (req, res) => {
 //Routes to have to get stock info. 
 app.get('/user/all', async (req, res) => {
   const allUsers = await User.find({});
+  console.log("test")
+  console.log(allUsers)
   res.json(allUsers)
 })
 
@@ -55,6 +60,20 @@ app.get('/user/:id', async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id)
   res.json(user)
+})
+
+app.post('/login', async (req, res) => {
+  const searchUser = await User.find(req.body) 
+  console.log(searchUser)
+  if(searchUser.length !== 0) {
+    console.log("User already exists")
+    res.json("User already exists")
+  }
+  else {
+    const newUser = new User(req.body);
+    await newUser.save();
+    res.json(newUser)
+  }
 })
 
 app.post('/user', async (req, res) => {
