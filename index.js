@@ -1,7 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const path = require('path');
+const morgan = require('morgan')
+const passport = require('passport')
+const fs = require('fs')
 require('dotenv').config()
+
 const app = express()
 const port = 3000
 
@@ -22,8 +26,10 @@ mongoose.connect(dbURL, mongoOptions)
     })
 
 /* middleware */
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(morgan('combined', { stream: accessLogStream }))
 
 /* Middleware function to set headers prior to all request.  */
 app.use((req, res, next) => {
@@ -40,58 +46,93 @@ app.use((req, res, next) => {
 //check if stock already exists in user?
 
 app.get('/stock/add/:id/:symbol', async (req, res) => {
-  const { id, symbol } = req.params;
-  //GET API KEY -from stock site. 
-  //stock API to fetch stock price for that symbol -> 
-  //make request to the site with Data return to user/ 
-  const user = await User.findByIdAndUpdate(id, {$addToSet: {stock: [symbol]}}, { new: true });
-  res.json(user)
+  try{
+    const { id, symbol } = req.params;
+    //GET API KEY -from stock site. 
+    //stock API to fetch stock price for that symbol -> 
+    //make request to the site with Data return to user/ 
+    const user = await User.findByIdAndUpdate(id, {$addToSet: {stock: [symbol]}}, { new: true });
+    res.json(user)
+  }
+  catch(e){
+    console.log("Could not append stock symbol")
+    console.log(e)
+  }
 })
 
 //Routes to have to get stock info. 
 app.get('/user/all', async (req, res) => {
-  const allUsers = await User.find({});
-  console.log("test")
-  console.log(allUsers)
-  res.json(allUsers)
+  try{
+    const allUsers = await User.find({});
+    console.log("test")
+    console.log(allUsers)
+    res.json(allUsers)
+  }
+  catch(e){
+    console.log("Error getting users")
+    console.log(e)
+  }
 })
 
 app.get('/user/:id', async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findById(id)
-  res.json(user)
+  try{
+    const { id } = req.params;
+    const user = await User.findById(id)
+    res.json(user)
+  }
+  catch(e){
+    console.log("Error getting user by id")
+    console.log(e)
+  }
 })
 
 app.post('/login', async (req, res) => {
-  const searchUser = await User.find(req.body) 
-  console.log(searchUser)
-  if(searchUser.length !== 0) {
-    console.log("User already exists")
-    res.json("User already exists")
+  try{
+    const searchUser = await User.find(req.body) 
+    if(searchUser.length !== 0) {
+      console.log("User already exists")
+      console.log(searchUser)
+      res.json("User already exists")
+    }
+    else {
+      const newUser = new User(req.body);
+      await newUser.save();
+      res.json(newUser)
+    }
   }
-  else {
-    const newUser = new User(req.body);
-    await newUser.save();
-    res.json(newUser)
+  catch(e){
+    console.log("Error logging in")
+    console.log(e)
   }
 })
 
 app.post('/user', async (req, res) => {
-  const searchUser = await User.find(req.body) 
-  console.log(searchUser)
-  if(searchUser.length !== 0) {
-    console.log("User already exists")
+  try{
+    const searchUser = await User.find(req.body) 
+    if(searchUser.length !== 0) {
+      console.log("User already exists")
+      console.log(searchUser)
+    }
+    else {
+      const newUser = new User(req.body);
+      await newUser.save();
+      res.json({ id: `${newUser._id}`})
+    }
   }
-  else {
-    const newUser = new User(req.body);
-    await newUser.save();
-    res.json({ id: `${newUser._id}`})
+  catch(e){
+    console.log("Error making new user")
+    console.log(e)
   }
 })
 
 app.delete('/user/deleteall', async (req, res) => {
-  const deletedProduct = await User.deleteMany({});
-  console.log("deleted all")
+  try{
+    const deletedProduct = await User.deleteMany({});
+    console.log("deleted all")
+  }
+  catch(e){
+    console.log(e)
+  }
 })
  
 //setup client-side

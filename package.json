@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "demo": "nodemon index.js",
     "start_prod": "pm2 start",
-    "stop_prod": "pm2 stop Options_server"
+    "stop_prod": "pm2 stop Options_server",
+    "logs" : "pm2 logs"
   },
   "repository": {
     "type": "git",
@@ -22,8 +23,11 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "fs": "^0.0.1-security",
     "mongoose": "^5.13.8",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.12",
+    "passport": "^0.4.1",
     "pm2": "^5.1.1"
   }
 }
