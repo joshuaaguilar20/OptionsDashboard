@@ -75,6 +75,7 @@ app.get('/user/all', async (req, res) => {
   }
 })
 
+
 app.get('/user/:id', async (req, res) => {
   try{
     const { id } = req.params;
@@ -87,12 +88,31 @@ app.get('/user/:id', async (req, res) => {
   }
 })
 
+app.post('/user/login', async (req, res) => {
+  try {
+    console.log(req.body)
+    const searchUser = await User.find(req.body)
+    console.log(searchUser)
+    if(searchUser.length !== 0) {
+      res.json(searchUser[0])
+    }
+    else {
+      console.log("User does not exist")
+      res.json("User does not exist")
+    }
+  }
+  catch (e) {
+    console.log("Error logging in")
+    console.log(e)
+  }
+})
+
 app.post('/user/signup', async (req, res) => {
   try{
     const searchUser = await User.find(req.body) 
     if(searchUser.length !== 0) {
       console.log("User already exists")
-      console.log(searchUser)
+      console.log(searchUser[0])
       res.json("User already exists")
     }
     else {
@@ -102,7 +122,7 @@ app.post('/user/signup', async (req, res) => {
     }
   }
   catch(e){
-    console.log("Error logging in")
+    console.log("Error signing up")
     console.log(e)
   }
 })
