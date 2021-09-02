@@ -39,11 +39,12 @@ app.use((req, res, next) => {
   next();
 });
 
-/* Assiocate with user: Josh: IBM, Apple
-   Notes: @TODO -> Logging
-   FRONT END Fetch stock price -> add then saves to db.
+/*
+TODO:
+Fix the login vs signup logic backend and frontend
+create a seperate route for signup and login, or combine the 2 with put request?
+create seperate signup page that you can access from the login page?
 */
-//check if stock already exists in user?
 
 app.get('/stock/add/:id/:symbol', async (req, res) => {
   try{
@@ -86,7 +87,7 @@ app.get('/user/:id', async (req, res) => {
   }
 })
 
-app.post('/login', async (req, res) => {
+app.post('/user/signup', async (req, res) => {
   try{
     const searchUser = await User.find(req.body) 
     if(searchUser.length !== 0) {
