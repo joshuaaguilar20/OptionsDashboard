@@ -109,7 +109,8 @@ app.post('/user/login', async (req, res) => {
 
 app.post('/user/signup', async (req, res) => {
   try{
-    const searchUser = await User.find(req.body) 
+    const { email } = req.params;
+    const searchUser = await User.find(email) 
     if(searchUser.length !== 0) {
       console.log("User already exists")
       console.log(searchUser[0])
@@ -123,25 +124,6 @@ app.post('/user/signup', async (req, res) => {
   }
   catch(e){
     console.log("Error signing up")
-    console.log(e)
-  }
-})
-
-app.post('/user', async (req, res) => {
-  try{
-    const searchUser = await User.find(req.body) 
-    if(searchUser.length !== 0) {
-      console.log("User already exists")
-      console.log(searchUser)
-    }
-    else {
-      const newUser = new User(req.body);
-      await newUser.save();
-      res.json({ id: `${newUser._id}`})
-    }
-  }
-  catch(e){
-    console.log("Error making new user")
     console.log(e)
   }
 })
