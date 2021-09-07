@@ -39,20 +39,12 @@ app.use((req, res, next) => {
   next();
 });
 
-/*
-TODO:
-Fix the login vs signup logic backend and frontend
-create a seperate route for signup and login, or combine the 2 with put request?
-create seperate signup page that you can access from the login page?
-*/
-
+//adds stock to watch to user, 
 app.get('/stock/add/:id/:symbol', async (req, res) => {
   try{
     const { id, symbol } = req.params;
-    //GET API KEY -from stock site. 
-    //stock API to fetch stock price for that symbol -> 
-    //make request to the site with Data return to user/ 
     const user = await User.findByIdAndUpdate(id, {$addToSet: {stock: [symbol]}}, { new: true });
+    console.log(user)
     res.json(user)
   }
   catch(e){
